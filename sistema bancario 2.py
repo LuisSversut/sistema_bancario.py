@@ -1,3 +1,14 @@
+from datetime import datetime
+
+#Definindo data
+
+def data():
+    data = datetime.now()
+    data_atual = data.strftime("%d/%m/%Y %H:%M")
+    return data_atual
+
+#Definindo menu
+
 def menu():
     return '''
 --------------MENU--------------
@@ -10,18 +21,23 @@ def menu():
     
 '''
 
+#Definindo depositos
+
 def deposito(saldo, extrato, /):
     valor = int(input("Deposito R$"))
 
     if valor > 0:
         saldo += valor
-        extrato += f"Deposito R${valor:.2f}\n"
+        data_hora = data()
+        extrato += f"Deposito R${valor:.2f} {data_hora}\n"
         print("\nDeposito realizado com sucesso!")
 
     else:
         print("VALOR INVALIDO")
 
     return saldo, extrato
+
+#Definindo saques
 
 def saque(*, saldo, extrato, limite, numero_saques, limite_saques):
     valor = float(input("SAQUE R$"))
@@ -41,7 +57,8 @@ def saque(*, saldo, extrato, limite, numero_saques, limite_saques):
 
     elif valor >0:
         saldo -= valor
-        extrato += f"Saque R${valor:.2f}\n"
+        data_hora = data()
+        extrato += f"Saque R${valor:.2f} {data_hora}\n"
         numero_saques += 1
         print("Saque realizado com sucesso!")
 
@@ -50,9 +67,14 @@ def saque(*, saldo, extrato, limite, numero_saques, limite_saques):
 
     return saldo, extrato
 
+#Definindo extrato
+
 def exibir_extrato(saldo, /, *, extrato):
     print("Sem movimentações." if not extrato else extrato)
-    print(f"\nSaldo R${saldo:.2f}")
+    data_hora = data()
+    print(f"\nSaldo R${saldo:.2f} {data_hora}")
+
+#Criando novo usuario
 
 def novo_usuario(usuarios):
     cpf = int(input("CPF: "))
@@ -70,9 +92,13 @@ def novo_usuario(usuarios):
 
     print("Usuario cadastrado com sucesso!")
 
+#Verificando se usuario ja existe
+
 def filtrar_usuario(cpf, usuarios):
     usuarios_filtrados = [usuario for usuario in usuarios if usuario["cpf"] == cpf]
     return usuarios_filtrados[0] if usuarios_filtrados else None
+
+#Criando nova conta
 
 def nova_conta(agencia, numero_conta, usuarios):
     cpf = int(input("CPF: "))
@@ -84,6 +110,8 @@ def nova_conta(agencia, numero_conta, usuarios):
     
     print("Usuario não encontrado, criação de conta encerrada!")
 
+#Nucleo do programa
+
 def main():
     LIMITE_SAQUES = 3
     AGENCIA = "0001"
@@ -94,8 +122,11 @@ def main():
     limite = 500
     usuarios = []
     contas = []
+
     while True:
+
         opcao = str(input(menu()))
+
         if opcao == "d":
             saldo, extrato = deposito(saldo, extrato)
         
@@ -125,7 +156,5 @@ def main():
 
         else:
             print("Opção invalida!")
-
-
 
 main()
